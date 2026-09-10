@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: qazaq-boss-autorent
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: REQUIRE_ADMIN
+        value: "1"
