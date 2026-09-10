@@ -1,0 +1,32 @@
+/* QAZAQ BOSS AUTORENT cloud-sync layer.
+   Existing UI can continue using localStorage, while this layer mirrors shared
+   business data to the Flask/SQLite backend so another device sees the same data. */
+(function(){
+  const KEYS=new Set(['qb_settings','qb_cars_v2','qb_services','qb_orders','qb_drivers','qb_notices','qb_staff','qb_expenses','qb_maintenance','qb_fines','qb_promos','qb_tariffs','qb_driver_locations']);
+  const nativeSet=Storage.prototype.setItem;
+  const nativeGet=Storage.prototype.getItem;
+  let booting=true, syncing=false;
+  function apiAvailable(){return location.protocol==='http:'||location.protocol==='https:'}
+  function boot(){
+    if(!apiAvailable()){booting=false;return;}
+    try{
+      const xhr=new XMLHttpRequest(); xhr.open('GET',location.pathname.includes('admin')?'/api/state':'/api/public-state',false); xhr.send(null);
+      if(xhr.status>=200&&xhr.status<300){
+        const data=JSON.parse(xhr.responseText||'{}');
+        Object.entries(data).forEach(([k,v])=>{ if(KEYS.has(k)) nativeSet.call(localStorage,k,JSON.stringify(v)); });
+        window.QB_CLOUD=true;
+      }
+    }catch(e){window.QB_CLOUD=false}
+    booting=false;
+  }
+  Storage.prototype.setItem=function(k,v){
+    nativeSet.call(this,k,v);
+    if(this!==localStorage||booting||syncing||!KEYS.has(k)||!apiAvailable()||!location.pathname.includes('admin')) return;
+    let parsed; try{parsed=JSON.parse(v)}catch(e){return}
+    fetch('/api/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:k,value:parsed})}).catch(()=>{});
+  };
+  window.qbRefreshFromCloud=async function(){
+    try{syncing=true;const r=await fetch(location.pathname.includes('admin')?'/api/state':'/api/public-state',{cache:'no-store'});const data=await r.json();Object.entries(data).forEach(([k,v])=>{if(KEYS.has(k))nativeSet.call(localStorage,k,JSON.stringify(v))});return data}finally{syncing=false}
+  };
+  boot();
+})();
