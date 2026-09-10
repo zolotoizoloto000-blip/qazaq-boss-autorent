@@ -27,12 +27,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 DEFAULTS = {
- 'qb_settings': {'company':'QAZAQ BOSS AUTORENT','whatsapp':'77752757063','phone':'+7 775 275 70 63','city':'Атырау','hours':'24/7 — онлайн-заявки','hero':'QAZAQ BOSS AUTORENT','subtitle':'Автопрокат • Такси • Трезвый водитель','success':'Заявка принята. Менеджер подтвердит стоимость и доступность.','ordersEnabled':True},
+ 'qb_settings': {'company':'QAZAQ BOSS AUTORENT','whatsapp':'77752757063','phone':'+7 775 275 70 63','city':'Атырау','hours':'24/7 — онлайн-заявки','hero':'QAZAQ BOSS AUTORENT','subtitle':'Автопрокат • Такси • Трезвый водитель','success':'Заявка принята. Менеджер подтвердит стоимость и доступность.','ordersEnabled':True,'instagram':'','twoGis':'','supportEmail':'','faq':[{'q':'Какие документы нужны?','a':'Точный список документов менеджер подтверждает перед выдачей автомобиля.'},{'q':'Можно арендовать с водителем?','a':'Да, аренда с водителем доступна по предварительной заявке.'},{'q':'Как подтверждается бронь?','a':'После заявки менеджер проверяет доступность и подтверждает бронирование.'}]},
  'qb_cars_v2': [
-  {'id':'c1','name':'Jaguar XJ','price':100000,'category':'Premium','year':2020,'gear':'Автомат','seats':5,'availability':'free','plate':'','description':'Премиальный седан для города и деловых поездок.','active':True,'driver':True,'image':'assets/car-front.jpg','rating':4.9,'trips':48},
-  {'id':'c2','name':'Jaguar F-Type','price':90000,'category':'Sport','year':2019,'gear':'Автомат','seats':2,'availability':'free','plate':'','description':'Спортивный автомобиль по предварительной заявке.','active':True,'driver':False,'image':'assets/car-night.jpg','rating':4.8,'trips':31},
-  {'id':'c3','name':'Range Rover','price':80000,'category':'SUV','year':2020,'gear':'Автомат','seats':5,'availability':'busy','plate':'','description':'Премиальный SUV для города и межгорода.','active':True,'driver':True,'image':'assets/car-rear.jpg','rating':4.9,'trips':64},
-  {'id':'c4','name':'Range Rover Velar','price':70000,'category':'Premium SUV','year':2021,'gear':'Автомат','seats':5,'availability':'free','plate':'','description':'Комфортный премиальный кроссовер.','active':True,'driver':True,'image':'assets/interior.jpg','rating':5.0,'trips':52}],
+  {'id':'c1','name':'Jaguar XJ','price':100000,'category':'Premium','year':2020,'gear':'Автомат','seats':5,'availability':'free','plate':'','description':'Премиальный седан для города и деловых поездок.','active':True,'driver':True,'image':'assets/jaguar-xj.svg','rating':4.9,'trips':48},
+  {'id':'c2','name':'Jaguar F-Type','price':90000,'category':'Sport','year':2019,'gear':'Автомат','seats':2,'availability':'free','plate':'','description':'Спортивный автомобиль по предварительной заявке.','active':True,'driver':False,'image':'assets/jaguar-ftype.svg','rating':4.8,'trips':31},
+  {'id':'c3','name':'Range Rover','price':80000,'category':'SUV','year':2020,'gear':'Автомат','seats':5,'availability':'busy','plate':'','description':'Премиальный SUV для города и межгорода.','active':True,'driver':True,'image':'assets/range-rover.svg','rating':4.9,'trips':64},
+  {'id':'c4','name':'Range Rover Velar','price':70000,'category':'Premium SUV','year':2021,'gear':'Автомат','seats':5,'availability':'free','plate':'','description':'Комфортный премиальный кроссовер.','active':True,'driver':True,'image':'assets/range-rover-velar.svg','rating':5.0,'trips':52}],
  'qb_services': [
   {'id':'s1','name':'Автопрокат','price':'от 70 000 ₸','description':'Каталог автомобилей, бронь и подтверждение.','active':True},
   {'id':'s2','name':'Такси','price':'по расчёту','description':'Поездки по Атырау и межгороду.','active':True},
@@ -178,7 +178,7 @@ with app.app_context():
 @app.get('/api/health')
 def health():
     kind = 'postgresql' if 'postgresql' in app.config['SQLALCHEMY_DATABASE_URI'] else 'sqlite'
-    return jsonify(ok=True,database=kind,time=datetime.utcnow().isoformat()+'Z',version='7.0')
+    return jsonify(ok=True,database=kind,time=datetime.utcnow().isoformat()+'Z',version='19.0-client-services')
 
 @app.get('/api/public-state')
 def public_state():
